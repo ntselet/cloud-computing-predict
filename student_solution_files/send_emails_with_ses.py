@@ -14,35 +14,44 @@
 """
 
 # Lambda dependencies
-import boto3    # Python AWS SDK
-import json     # Used for handling API-based data.
-import base64   # Needed to decode the incoming POST data
-from botocore.exceptions import ClientError # Catch errors on client side
+import boto3  # Python AWS SDK
+import json  # Used for handling API-based data.
+import base64  # Needed to decode the incoming POST data
+from botocore.exceptions import ClientError  # Catch errors on client s
+
+
 
 def lambda_handler(event, context):
-    
-    # Perform JSON data decoding 
+    ses = boto3.client('ses')
+    # Perform JSON data decoding
     body_enc = event['body']
     dec_dict = json.loads(base64.b64decode(body_enc))
 
     # Sample text that you would like to email to your recipient 
     # address from your sender address.
-    email_text = 'Insert your sample email here'
+    email_text = 'Hello world'
 
     # ** SES Functionality **
 
     # Replace sender@example.com with your "From" address.
     # This address must be verified with Amazon SES.
     # --- Insert your code here ---
-    SENDER = 'sender@example.com'
+    SENDER = 'ntselet@otmail.com'
+    ses.send_mail(
+        Source='string',
+        Destination={
+            'ToAddresses': [
+                'ntselet@hotmail.com',
+            ]
+        },
+    )
     # -----------------------------
 
     # Replace recipient@example.com with a "To" address. If your account 
     # is still in the sandbox, this address must be verified.
     # --- Insert your code here ---
-    RECIPIENT = 'recipient@example.com' 
+    RECIPIENT = 'ntseleta@gmail.com'
     # -----------------------------
-
 
     # The subject line for the email.
     # --- DO NOT MODIFY THIS CODE ---
@@ -60,7 +69,7 @@ def lambda_handler(event, context):
 
     # Try to send the email.
     try:
-        #Provide the contents of the email.
+        # Provide the contents of the email.
         ses_response = client.send_email(
             Destination={
                 'ToAddresses': [
@@ -96,16 +105,13 @@ def lambda_handler(event, context):
     lambda_response = {
         'statusCode': 200,
         'body': json.dumps({
-        'Name': dec_dict['name'],
-        'Email': dec_dict['email'],
-        'Cell': dec_dict['phone'], 
-        'Message': dec_dict['message'],
-        'SES_response': ses_response,
-        'Email_message': email_text
+            'Name': dec_dict['name'],
+            'Email': dec_dict['email'],
+            'Cell': dec_dict['phone'],
+            'Message': dec_dict['message'],
+            'SES_response': ses_response,
+            'Email_message': email_text
         })
     }
 
     return lambda_response
-            
-        
-    
