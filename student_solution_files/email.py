@@ -78,7 +78,7 @@ def lambda_handler(event, context):
     CHARSET = "UTF-8"
 
     # Create a new SES service resource
-    client = boto3.client('ses')
+    client = client('ses')
 
     # Try to send the email.
     try:
